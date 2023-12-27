@@ -1,5 +1,9 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class MethodParser {
 
     /**
@@ -20,6 +24,65 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        StringTokenizer tok = new StringTokenizer(signatureString, "\\(\\)");
+        List<String> properties = new ArrayList<>();
+        String[] forName;
+        List<MethodSignature.Argument> forArgs = new ArrayList<>();
+        while (tok.hasMoreTokens()){
+            properties.add(tok.nextToken());
+        }
+        if(properties.size() == 1){
+            forName = methodName(properties.get(0));
+        }
+        else{
+            forName = methodName(properties.get(0));
+            forArgs = args(properties.get(1));
+        }
+
+        String name;
+        String accessModifier = null;
+        String returnType;
+
+        if(forName.length == 3){
+            accessModifier = forName[0];
+            returnType = forName[1];
+            name = forName[2];
+        }
+        else{
+            returnType = forName[0];
+            name = forName[1];
+        }
+        MethodSignature methodSignature = new MethodSignature(name, forArgs);
+        methodSignature.setMethodName(name);
+        methodSignature.setAccessModifier(accessModifier);
+        methodSignature.setReturnType(returnType);
+        return methodSignature;
     }
+
+    public static String[] methodName(String forName){
+        return forName.split(" ");
+    }
+
+    public static List<MethodSignature.Argument> args(String arg){
+        StringTokenizer tok = new StringTokenizer(arg, "\\ \\,");
+        List<String>  fromToken = new ArrayList<>();
+        List<MethodSignature.Argument> args = new ArrayList<MethodSignature.Argument>();
+        while (tok.hasMoreTokens()){
+            fromToken.add(tok.nextToken());
+        }
+
+        for(int i = 0; i<fromToken.size(); i++){
+            if(i%2 == 0){
+                String type, name;
+                type = fromToken.get(i);
+                name = fromToken.get(i+1);
+                MethodSignature.Argument a = new MethodSignature.Argument(type, name);
+                args.add(a);
+            }
+        }
+
+        return args;
+    }
+
+
 }
