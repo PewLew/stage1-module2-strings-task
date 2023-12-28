@@ -13,7 +13,8 @@ public class StringSplitter {
      * @return List of substrings
      */
     public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
-        List<String> list = splitByDelimiters(source, delimiters);
+        StringSplitter splitter = new StringSplitter();
+        List<String> list = splitter.splitByDelimiters(source, delimiters);
         return  list;
     }
 }
